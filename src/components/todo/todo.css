@@ -1,0 +1,47 @@
+h1 {
+  color: rgba(184, 51, 73, 0.815);
+  font-size: 50px;
+}
+li {
+  list-style-type: none;
+}
+body {
+  padding: 10px;
+  text-align: center;
+}
+.container {
+  text-align: right;
+}
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+}
+.list td {
+  border-bottom: 2px solid rgba(184, 51, 73, 0.815);
+  padding: 7px;
+  min-width: 50px;
+}
+
+.title {
+  text-align: left;
+}
+
+.plus {
+  text-align: left;
+}
+.garbage {
+  text-align: right;
+  border-right: 2px solid rgba(184, 51, 73, 0.815);
+}
+.checkbox {
+  text-align: right;
+}
+.input td {
+  padding-bottom: 25px;
+  border-bottom: 2px solid rgba(184, 51, 73, 0.815);
+}
+.name {
+  text-align: left;
+  border-left: 2px solid rgba(184, 51, 73, 0.815);
+}
