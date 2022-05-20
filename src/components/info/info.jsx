@@ -84,8 +84,7 @@ export const Info = () => {
     console.log("parmas.length" + params.length);
     console.log("params info: " + params);
     for (var i = 0; i < params.length; i++) {
-      console.log("name: " + params[0].name);
-      names.push(params[0].name);
+      names.push(params[i].name);
     }
     return names;
   };

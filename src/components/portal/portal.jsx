@@ -19,8 +19,11 @@ import Alert from "@mui/material/Alert";
 import { UserContext } from "../state/context-user";
 
 export const Portal = () => {
+  const {myMeds, myUser} = useContext(UserContext);
+  const [medsTaking, setMedsTaking] = myMeds;
+  const [user, setUser] = myUser;
+
   const [meds, setMeds] = useState([]);
-  const {medsTaking, setMedsTaking} = useContext(UserContext);
 
   const [rxCode, setRxCode] = useState("");
   const [medName, setMedName] = useState("");
@@ -153,7 +156,7 @@ export const Portal = () => {
     <div>
       <Grid sx={{ width: "75%", margin: "auto" }}>
         <h1>Your Portal</h1>
-        <h2>Patient: Name of Patient</h2>
+        <h2>Patient: {user.name}</h2>
       </Grid>
       <Card
         variant="outlined"

@@ -12,8 +12,8 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-
+import { useState, useContext } from "react";
+import { UserContext } from "../state/context-user";
 
 const pages = [
   { title: "Home", path: "/" },
@@ -21,6 +21,7 @@ const pages = [
 ];
 
 export const Header = () => {
+  
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [signedIn, setSignedIn] = useState(false);
@@ -123,12 +124,20 @@ export const Header = () => {
 };
 
 const User = (props) => {
+  const {myMeds, myUser} = useContext(UserContext);
+  const [medsTaking, setMedsTaking] = myMeds;
+  const [user, setUser] = myUser;
+
+  
 
   return (<div>
     <Avatar
-    sx={{ bgcolor: "grey",}}
-    alt="Shani" >
-      </Avatar>
+  sx={{ bgcolor: 'grey' }}
+  alt="Remy Sharp"
+  src="/broken-image.jpg"
+>
+  {user.name.charAt(0)}
+</Avatar>
     </div>); 
   
 }

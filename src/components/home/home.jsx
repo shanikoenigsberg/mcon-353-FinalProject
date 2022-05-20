@@ -20,20 +20,15 @@ import {UserContext} from "../state/context-user";
 //<Icon icon="mdi:pill" />
 
 export const Home = () => {
-  const {user, setUser} = useContext(UserContext);
+  const {myMeds, myUser} = useContext(UserContext);
+  const [user, setUser] = myUser;
   const [signedIn, setSignedIn] = useState(false);
 
 
-  useEffect(() => {
-    
-
-      //<h4 id={show} sx={{display: 'none'}}>Welcome, {userName}!</h4>
-      //pass props
-  });
-
-  const signIn = () => {
-    
-
+  const signIn = (params) => {
+    setUser(params);
+    console.log(user.name)
+    setSignedIn(true);
   }
 
 
@@ -42,8 +37,8 @@ export const Home = () => {
     <div className="App">
       <h1>WELCOME TO YOUR PATIENT PORTAL</h1>
       <MedicalServicesIcon sx={{ fontSize: 80 }}></MedicalServicesIcon>
-      { signedIn ? <div><h4>Welcome, {user.name}</h4></div>
-     : <LogIn /> }
+      { Object.keys(user).length === 0 ? <LogIn signIn={signIn}/>
+     : <div><h2>Welcome, {user.name}!</h2><h4>You can access your patient portal by going to PORTAL in the menu.</h4></div> }
     </div>
   );
 };
@@ -56,17 +51,36 @@ const LogIn = (props) => {
       .then((data) => {
         setMedications(data.displayTermsList.term);
       });
-
-      
-      //pass props
   });
 
-  const [open, setOpen] = useState(false);
-  const [allergies, setAllergies] = useState([]);
-  const [currMedications, setCurrMedications] = useState([]);
   const [showResults, setShowResults] = useState(false);
-  const [value, setValue] = useState();
+  
   const [medications, setMedications] = useState([]);
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [dob, setDOB] = useState();
+  const [currMedications, setCurrMedications] = useState([]);
+
+  const configureUser = () => {
+    let user = {};
+    if(currMedications !== null){
+      user = {
+        name: firstName + " " + lastName,
+        dob: dob,
+        currMedications: currMedications
+      }
+    }
+    else{
+      user = {
+        name: firstName + " " + lastName,
+        dob: dob,
+      }
+    }
+    
+
+    props.signIn(user);
+  }
 
   return (
     <div>
@@ -78,13 +92,13 @@ const LogIn = (props) => {
             <h3>First Name:</h3>
           </Grid>
           <Grid item xs={3}>
-            <TextField id="standard-basic" label="John" variant="standard" />
+            <TextField id="standard-basic" label="John" variant="standard" onChange={(event) => setFirstName(event.target.value)}/>
           </Grid>
           <Grid item xs={3}>
             <h3>Last Name:</h3>
           </Grid>
           <Grid item xs={3}>
-            <TextField id="standard-basic" label="Doe" variant="standard" />
+            <TextField id="standard-basic" label="Doe" variant="standard" onChange={(event) => setLastName(event.target.value)}/>
           </Grid>
           <Grid item xs={3}>
             <h3>Date of Birth:</h3>
@@ -92,9 +106,9 @@ const LogIn = (props) => {
           <Grid item xs={3}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
-                value={value}
-                onChange={(newValue) => {
-                  setValue(newValue);
+                value={dob}
+                onChange={(newDate) => {
+                  setDOB(newDate);
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
@@ -130,18 +144,19 @@ const LogIn = (props) => {
         multiple
         disablePortal
         id="medications-select"
-        options={props.medications}
+        options={medications}
         sx={{ width: 200 }}
         renderInput={(params) => (
           <TextField {...params} label="Select medication" />
         )}
+        onChange={(event, value) => setCurrMedications(value)}
       />
     </Grid></div> : null }
         </Grid>
 
         <Button
           variant="outlined"
-          onClick={() => {props.signIn()}}
+          onClick={() => {configureUser()}}
           sx={{ color: "black", border: "1px solid black" }}
         >
           Sign in
