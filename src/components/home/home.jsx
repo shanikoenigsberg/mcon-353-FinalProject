@@ -27,7 +27,6 @@ export const Home = () => {
 
   const signIn = (params) => {
     setUser(params);
-    console.log(user.name)
     setSignedIn(true);
   }
 
@@ -61,20 +60,32 @@ const LogIn = (props) => {
   const [lastName, setLastName] = useState("");
   const [dob, setDOB] = useState();
   const [currMedications, setCurrMedications] = useState([]);
+  const [allergies, setAllergies] = useState([]);
 
   const configureUser = () => {
     let user = {};
-    if(currMedications !== null){
+    if(currMedications !== null && allergies === null){
       user = {
         name: firstName + " " + lastName,
         dob: dob,
-        currMedications: currMedications
+        currMedications: currMedications,
+        allergies: null
+      }
+    }
+    else if(currMedications === null && allergies !== null){
+      user = {
+        name: firstName + " " + lastName,
+        dob: dob,
+        currMedications: null,
+        allergies: allergies
       }
     }
     else{
       user = {
         name: firstName + " " + lastName,
         dob: dob,
+        currMedications: currMedications,
+        allergies: allergies,
       }
     }
     
@@ -114,8 +125,8 @@ const LogIn = (props) => {
               />
             </LocalizationProvider>
           </Grid>
-          {/* <Grid item xs={3}>
-            <h3>Allergies:</h3>
+          <Grid item xs={3}>
+            <h3>Medicine Allergies:</h3>
           </Grid>
           <Grid item xs={3}>
             <Autocomplete
@@ -127,15 +138,17 @@ const LogIn = (props) => {
               renderInput={(params) => (
                 <TextField {...params} label="Select Allergies" />
               )}
+              onChange={(event, value) => setAllergies(value)}
             />
-          </Grid> */}
+          </Grid>
           <Grid item xs={3}>
-            <h3>Are you on any medication?</h3>
+            <h3>On medication?</h3>
           </Grid>
           <Grid item xs={3}>
             <Checkbox onChange={() => setShowResults(!showResults)}></Checkbox>
           </Grid>
-          { showResults ? <div>
+          { showResults ? 
+       <>  
     <Grid item xs={3}>
       <h3>Select medications:</h3>
     </Grid>
@@ -151,7 +164,7 @@ const LogIn = (props) => {
         )}
         onChange={(event, value) => setCurrMedications(value)}
       />
-    </Grid></div> : null }
+    </Grid></>   : null }
         </Grid>
 
         <Button

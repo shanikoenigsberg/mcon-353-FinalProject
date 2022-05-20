@@ -18,6 +18,7 @@ import { UserContext } from "../state/context-user";
 const pages = [
   { title: "Home", path: "/" },
   { title: "Portal", path: "/portal" },
+  { title: "Info", path: "/info"},
 ];
 
 export const Header = () => {
@@ -129,15 +130,26 @@ const User = (props) => {
   const [user, setUser] = myUser;
 
   
-
-  return (<div>
-    <Avatar
-  sx={{ bgcolor: 'grey' }}
-  alt="Remy Sharp"
-  src="/broken-image.jpg"
->
-  {user.name.charAt(0)}
-</Avatar>
-    </div>); 
+  if(Object.keys(user).length === 0 ){
+    return (<div>
+      <Avatar
+    sx={{ bgcolor: 'grey' }}
+    src="/broken-image.jpg"
+  >
+  </Avatar>
+      </div>); 
+  }
+  else{
+    return (<div>
+      <Avatar
+    sx={{ bgcolor: 'grey' }}
+    src="/broken-image.jpg"
+  >
+    {user.name.charAt(0)}
+  </Avatar>
+      </div>); 
+    
+  }
+  
   
 }

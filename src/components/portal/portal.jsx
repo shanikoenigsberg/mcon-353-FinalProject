@@ -17,6 +17,11 @@ import Snackbar from "@mui/material/Snackbar";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import { UserContext } from "../state/context-user";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 export const Portal = () => {
   const {myMeds, myUser} = useContext(UserContext);
@@ -33,6 +38,7 @@ export const Portal = () => {
   const [stopTaking, setStopTaking] = useState(new Date());
 
   const [open, setOpen] = useState(false);
+  const [openD, setOpenD] = useState(true);
 
   let navigate = useNavigate();
 
@@ -108,23 +114,23 @@ export const Portal = () => {
   };
 
   const moreInformation = (currMed) => {
-    var code = null;
+    var name = null;
     medsTaking.map((med) => {
       if (currMed === med.medName) {
-        code = med.rxNormCode;
+        name = med.medName;
       } else {
-        return code;
+        return name;
       }
     });
 
-    console.log("RXCODE " + code);
+    console.log("RXCODE " + medName);
 
-    goToInfoPg(code);
+    goToInfoPg(name);
   };
 
-  const goToInfoPg = function (code) {
+  const goToInfoPg = function (name) {
     navigate("/info", {
-      state: code,
+      state: name,
     });
   };
 
@@ -144,7 +150,22 @@ export const Portal = () => {
     initialize();
   });
 
+
+  const handleCloseD = () => {
+    setOpen(false);
+  };
+
+  const signIn = () => {
+    navigate("/");
+  }
+
   const initialize = () => {
+    if(Object.keys(user).length === 0){
+      setOpenD(true);
+    }
+    else{
+      setOpenD(false);
+    }
     fetch(`https://rxnav.nlm.nih.gov/REST/Prescribe/displaynames.json`)
       .then((response) => response.json())
       .then((data) => {
@@ -154,6 +175,25 @@ export const Portal = () => {
 
   return (
     <div>
+      <Dialog
+        open={openD}
+        onClose={handleCloseD}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          {"Did you sign in?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Make sure that you have signed in so that you can properly use your portal.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={() => {signIn()}}>
+            SIGN IN
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Grid sx={{ width: "75%", margin: "auto" }}>
         <h1>Your Portal</h1>
         <h2>Patient: {user.name}</h2>
@@ -244,6 +284,7 @@ export const Portal = () => {
             justifyContent: "center",
           }}
         >
+          <h6>DISCLAIMER: ALL MEDICATIONS MUST BE APPROVED BY DOCTOR BEFORE USE.</h6>
           <Button
             sx={{ margin: "auto", color: "black", border: "1px solid black" }}
             variant="outlined"
@@ -272,13 +313,13 @@ export const Portal = () => {
           ))}
         </Grid>
       </CardContent>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
           <Alert
             onClose={handleClose}
             severity="success"
             sx={{ width: "100%" }}
           >
-            You have successfully registered your taken medication:
+            You have successfully registered your taken medication.
            
           </Alert>
         </Snackbar>

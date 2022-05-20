@@ -3,7 +3,6 @@ import React from "react";
 import {useContext} from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { Header } from "../header/header";
-import { TodoProvider } from "../state/context";
 import { Portal } from "../portal/portal";
 import { Home } from "../home/home";
 import { Info } from "../info/info";
