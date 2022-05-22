@@ -18,7 +18,7 @@ export const Info = () => {
   const [importantInfo, setImportantInfo] = useState([]);
   const [otherNames, setOtherNames] = useState([]);
   const [selectedMed, setSelectedMed] = useState(null);
-  const [selectedCode, setSelectedCode] = useState();
+  const [selectedCode, setSelectedCode] = useState(null);
   const [showInput, setShowInput] = useState(false);
 
   useEffect(() => {
@@ -34,16 +34,23 @@ export const Info = () => {
       console.log("selectedMed !== null" + selectedMed === null);
       console.log(selectedMed);
 
+    if(selectedCode === null && selectedMed !== null){
+      fetch(
+        `https://rxnav.nlm.nih.gov/REST/rxcui.json?name=${selectedMed}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setSelectedMed(selectedMed);
+          setSelectedCode(data.idGroup.rxnormId[0]);
+          console.log(selectedMed);
+        });
+    }
 
-    if(selectedMed !== null){
-      fetch(`https://rxnav.nlm.nih.gov/REST/rxcui.json?name=${selectedMed}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setSelectedCode(data.idGroup.rxnormId[0]);
-      });
 
-      console.log("location.state !== null" + location.state !== null);
-      console.log("selectedMed !== null" + selectedMed !== null);
+    if(selectedCode !== null && selectedMed != null){
+
+        console.log("location.state !== null" + location.state !== null);
+      console.log("selectedMed !== null && selectedcode" + selectedMed !== null && selectedCode !== null);
       console.log(location.state);
       
     fetch(
@@ -69,9 +76,19 @@ export const Info = () => {
         );
         setImportantInfo(getImportantInfo(data.allRelatedGroup.conceptGroup));
       });
+
+      
     }
     else if(location.state !== null){
-      setSelectedMed(location.state);
+      setSelectedCode(location.state);
+      fetch(
+        `https://rxnav.nlm.nih.gov/REST/rxcui/${location.state}.json`
+      )
+        .then((response) => response.json())
+        .then((data) => { 
+          setSelectedMed(data.idGroup.name);
+        });
+      
     }    
 
   }, [selectedMed, selectedCode]);
@@ -158,8 +175,14 @@ export const Info = () => {
     return forms;
   };
 
+  const configureMed = (props) => {
 
-  if(location.state !== null || selectedMed !== null){
+    setSelectedMed(props);
+    setSelectedCode(null);
+  }
+
+
+  if(selectedMed !== null){
     return (
       <div sx={{ padding: "10px" }}>
         <h1>DRUG-DRUG INTERACTIONS: {selectedMed.toLocaleUpperCase()}</h1>
@@ -177,7 +200,7 @@ export const Info = () => {
               renderInput={(params) => (
                 <TextField {...params} label="Choose Medicine..." />
               )}
-              onChange={(event, value) => setSelectedMed(value)}
+              onChange={(event, value) => configureMed(value)}
             /></>
             : null}
         <h2>ALSO KNOWN AS: {otherNames === null? "None listed" : otherNames.toString()}</h2>
@@ -204,7 +227,7 @@ export const Info = () => {
               renderInput={(params) => (
                 <TextField {...params} label="Choose Medicine..." />
               )}
-              onChange={(event, value) => setSelectedMed(value)}
+              onChange={(event, value) => configureMed(value)}
             /></>
     
   }

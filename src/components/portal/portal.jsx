@@ -114,23 +114,23 @@ export const Portal = () => {
   };
 
   const moreInformation = (currMed) => {
-    var name = null;
+    var code = null;
     medsTaking.map((med) => {
       if (currMed === med.medName) {
-        name = med.medName;
+        code = med.rxNormCode;
       } else {
-        return name;
+        return code;
       }
     });
 
     console.log("RXCODE " + medName);
 
-    goToInfoPg(name);
+    goToInfoPg(code);
   };
 
-  const goToInfoPg = function (name) {
+  const goToInfoPg = function (code) {
     navigate("/info", {
-      state: name,
+      state: code,
     });
   };
 
