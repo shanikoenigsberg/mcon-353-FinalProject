@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
+import { PortalContext } from "../state/context-portal";
 import { UserContext } from "../state/context-user";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -24,9 +25,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 export const Portal = () => {
-  const {myMeds, myUser} = useContext(UserContext);
-  const [medsTaking, setMedsTaking] = myMeds;
-  const [user, setUser] = myUser;
+  const {medsTaking, setMedsTaking} = useContext(PortalContext);
+  const {user, setUser} = useContext(UserContext);
 
   const [meds, setMeds] = useState([]);
 
@@ -72,7 +72,6 @@ export const Portal = () => {
       },
     ];
 
-    console.log(newMeds);
     setMedsTaking(newMeds);
   }
 
@@ -123,7 +122,6 @@ export const Portal = () => {
       }
     });
 
-    console.log("RXCODE " + medName);
 
     goToInfoPg(code);
   };

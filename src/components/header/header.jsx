@@ -36,12 +36,6 @@ export const Header = () => {
     navigate(page.path);
   };
 
-  const goToUserInfo = () => {
-    if(signedIn){
-      console.log("signed in");
-    }
-  }
-
   return (
     <AppBar position="static" style={{backgroundColor: "#2e060b"}}>
       <Container maxWidth="xl" >
@@ -115,7 +109,7 @@ export const Header = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}></Box>
-          <User sx={{ float: 'right',}} page={anchorElNav} onClick={() => goToUserInfo()}/>
+          <User sx={{ float: 'right',}} page={anchorElNav}/>
         </Toolbar>
         
       </Container>

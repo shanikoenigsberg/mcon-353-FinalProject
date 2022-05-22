@@ -7,10 +7,12 @@ import { Portal } from "../portal/portal";
 import { Home } from "../home/home";
 import { Info } from "../info/info";
 import { UserProvider } from "../state/context-user";
+import {PortalProvider} from "../state/context-portal";
 
 function App() {
   return (
     <div>
+      <PortalProvider>
       <UserProvider>
         <HashRouter>
           <Header />
@@ -21,6 +23,7 @@ function App() {
           </Routes>
         </HashRouter>
       </ UserProvider>
+      </PortalProvider>
     </div>
   );
 }

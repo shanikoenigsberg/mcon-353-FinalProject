@@ -3,9 +3,7 @@ import "./home.css";
 import React, { useState } from "react";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import Grid from "@mui/material/Grid";
-import Snackbar from "@mui/material/Snackbar";
 import Button from "@mui/material/Button";
-import Alert from "@mui/material/Alert";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
@@ -14,14 +12,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useEffect, useContext } from "react";
 import Checkbox from "@mui/material/Checkbox";
-import {UserContext} from "../state/context-user";
-
-//<Icon icon="medical-icon:i-pharmacy" />
-//<Icon icon="mdi:pill" />
+import { UserContext } from "../state/context-user";
 
 export const Home = () => {
-  const {myMeds, myUser} = useContext(UserContext);
-  const [user, setUser] = myUser;
+  const {user, setUser} = useContext(UserContext);
   const [signedIn, setSignedIn] = useState(false);
 
 
