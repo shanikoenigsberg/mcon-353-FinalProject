@@ -119,9 +119,7 @@ export const Header = () => {
 };
 
 const User = (props) => {
-  const {myMeds, myUser} = useContext(UserContext);
-  const [medsTaking, setMedsTaking] = myMeds;
-  const [user, setUser] = myUser;
+  const {user, setUser} = useContext(UserContext);
 
   
   if(Object.keys(user).length === 0 ){
