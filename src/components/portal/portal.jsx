@@ -18,15 +18,15 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import { PortalContext } from "../state/context-portal";
 import { UserContext } from "../state/context-user";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 export const Portal = () => {
-  const {medsTaking, setMedsTaking} = useContext(PortalContext);
-  const {user, setUser} = useContext(UserContext);
+  const { medsTaking, setMedsTaking } = useContext(PortalContext);
+  const { user, setUser } = useContext(UserContext);
 
   const [meds, setMeds] = useState([]);
 
@@ -58,37 +58,34 @@ export const Portal = () => {
   const addToMedsTaking = () => {
     const date = new Date();
 
-    if(takeAgain.getDate() <= date.getDate()){
-      
-    const newMeds = [
-      ...medsTaking,
-      {
-        medName: medName.toLocaleUpperCase(),
-        firstTaken: firstTaken.toLocaleTimeString(),
-        dosageFrequency: dosageFrequency,
-        takeAgain: takeAgain.toLocaleTimeString(),
-        rxNormCode: rxCode,
-        stopTaking: stopTaking.toLocaleDateString(),
-      },
-    ];
+    if (takeAgain.getDate() <= date.getDate()) {
+      const newMeds = [
+        ...medsTaking,
+        {
+          medName: medName.toLocaleUpperCase(),
+          firstTaken: firstTaken.toLocaleTimeString(),
+          dosageFrequency: dosageFrequency,
+          takeAgain: takeAgain.toLocaleTimeString(),
+          rxNormCode: rxCode,
+          stopTaking: stopTaking.toLocaleDateString(),
+        },
+      ];
 
-    setMedsTaking(newMeds);
-  }
-
-
+      setMedsTaking(newMeds);
+    }
   };
 
   const takeMedicine = (nameOfMed) => {
-
     medsTaking.map((med) => {
       if (nameOfMed === med.medName) {
         const now = new Date();
         med.firstTaken = new Date().toLocaleTimeString();
         const newDate = new Date();
-        const hours = parseInt(newDate.getHours()) + parseInt(med.dosageFrequency);
+        const hours =
+          parseInt(newDate.getHours()) + parseInt(med.dosageFrequency);
         newDate.setHours(hours);
 
-        if(newDate.getDate() > now.getDate()){
+        if (newDate.getDate() > now.getDate()) {
           setMedsTaking(medsTaking.filter((med) => med.medName !== nameOfMed));
         }
 
@@ -98,10 +95,7 @@ export const Portal = () => {
       } else {
         return med;
       }
-
-
     });
-
   };
 
   const getRxNormCode = (currMed) => {
@@ -109,6 +103,7 @@ export const Portal = () => {
       .then((response) => response.json())
       .then((data) => {
         setRxCode(data.idGroup.rxnormId[0]);
+        return data.idGroup.rxnormId[0];
       });
   };
 
@@ -122,9 +117,12 @@ export const Portal = () => {
       }
     });
 
-
     goToInfoPg(code);
   };
+
+  const moreInformationConst = (code) => {
+    goToInfoPg(code);
+  }
 
   const goToInfoPg = function (code) {
     navigate("/info", {
@@ -148,20 +146,18 @@ export const Portal = () => {
     initialize();
   });
 
-
   const handleCloseD = () => {
     setOpen(false);
   };
 
   const signIn = () => {
     navigate("/");
-  }
+  };
 
   const initialize = () => {
-    if(Object.keys(user).length === 0){
+    if (Object.keys(user).length === 0) {
       setOpenD(true);
-    }
-    else{
+    } else {
       setOpenD(false);
     }
     fetch(`https://rxnav.nlm.nih.gov/REST/Prescribe/displaynames.json`)
@@ -169,7 +165,7 @@ export const Portal = () => {
       .then((data) => {
         setMeds(data.displayTermsList.term);
       });
-  }
+  };
 
   return (
     <div>
@@ -183,11 +179,17 @@ export const Portal = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Make sure that you have signed in so that you can properly use your portal.
+            Make sure that you have signed in so that you can properly use your
+            portal.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={() => {signIn()}}>
+          <Button
+            autoFocus
+            onClick={() => {
+              signIn();
+            }}
+          >
             SIGN IN
           </Button>
         </DialogActions>
@@ -282,7 +284,9 @@ export const Portal = () => {
             justifyContent: "center",
           }}
         >
-          <h6>DISCLAIMER: ALL MEDICATIONS MUST BE APPROVED BY DOCTOR BEFORE USE.</h6>
+          <h6>
+            DISCLAIMER: ALL MEDICATIONS MUST BE APPROVED BY DOCTOR BEFORE USE.
+          </h6>
           <Button
             sx={{ margin: "auto", color: "black", border: "1px solid black" }}
             variant="outlined"
@@ -309,18 +313,22 @@ export const Portal = () => {
               ></Medicine>
             </Grid>
           ))}
+          {user.currMedications.map((med) => (
+            <Grid item xs={6}>
+              <ConstMedicine
+                name={med.toLocaleUpperCase()}
+                getRxNormCode={getRxNormCode}
+                moreInformation={moreInformationConst}
+              ></ConstMedicine>
+            </Grid>
+          ))}
         </Grid>
       </CardContent>
       <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-          <Alert
-            onClose={handleClose}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            You have successfully registered your taken medication.
-           
-          </Alert>
-        </Snackbar>
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          You have successfully registered your taken medication.
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
@@ -346,6 +354,31 @@ const Medicine = (props) => {
           <Button
             variant="outline-secondary"
             onClick={() => props.moreInformation(props.name)}
+          >
+            <QuestionMark />
+            <h4>MORE INFORMATION</h4>
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+const ConstMedicine = (props) => {
+  return (
+    <div>
+      <Card variant="outlined" sx={{ width: "100%", margin: "auto" }}>
+        <CardContent>
+          <h3>Medicine Name: {props.name}</h3>
+          <h4>Note: This is a medicine you are currently taking.</h4>
+          <h4>
+            If you want this to display the time to retake, please enter it on
+            top.
+          </h4>
+          <h4>MEDICATION TYPE: CONSTANT</h4>
+          <Button
+            variant="outline-secondary"
+            onClick={() => props.moreInformation(props.getRxNormCode())}
           >
             <QuestionMark />
             <h4>MORE INFORMATION</h4>

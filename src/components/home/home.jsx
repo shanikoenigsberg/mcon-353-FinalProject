@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
+import {MenuItem} from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -24,6 +25,11 @@ export const Home = () => {
     setSignedIn(true);
   }
 
+  const configureSignIn = () => {
+    setSignedIn(false);
+    setUser({});
+  }
+
 
 
   return (
@@ -31,7 +37,11 @@ export const Home = () => {
       <h1>WELCOME TO YOUR PATIENT PORTAL</h1>
       <MedicalServicesIcon sx={{ fontSize: 80 }}></MedicalServicesIcon>
       { Object.keys(user).length === 0 ? <LogIn signIn={signIn}/>
-     : <div><h2>Welcome, {user.name}!</h2><h4>You can access your patient portal by going to PORTAL in the menu.</h4></div> }
+     : <div>
+       <h2>Welcome, {user.name}!</h2>
+       <h4>You can access your patient portal by going to PORTAL in the menu.</h4>
+       <Button sx={{color: 'black'}} onClick={() => {configureSignIn()}}>NOT YOU? CHANGE PROFILE</Button>
+     </div> }
     </div>
   );
 };
@@ -86,6 +96,8 @@ const LogIn = (props) => {
 
     props.signIn(user);
   }
+
+  
 
   return (
     <div>
